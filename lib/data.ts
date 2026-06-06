@@ -18,7 +18,7 @@ export type PolicyEvidence = {
   comparisonSignal: "mismatch" | "insufficient_data" | "matches";
   claims: Array<{
     text: string;
-    source: EvidenceSource;
+    source?: EvidenceSource;
   }>;
   actions: Array<{
     text: string;

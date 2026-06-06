@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+data/research-audit.md
+data/real_research_demo_seed.sql
+.gitignore
+.gitignore
+data/demo_supabase_seed.sql

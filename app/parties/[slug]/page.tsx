@@ -29,21 +29,31 @@ import {
 
 const comparisonSignals: Record<
   PolicyEvidence["comparisonSignal"],
-  { label: string; className: string }
+  { label: string; className: string; evidenceLabel: string; actionLabel: string }
 > = {
   mismatch: {
     label: "Има разминаване",
     className: "border-amber-200 bg-amber-50 text-amber-800",
+    evidenceLabel: "Проверена политика",
+    actionLabel: "Намерено действие",
   },
   insufficient_data: {
     label: "Няма достатъчно данни",
     className: "border-slate-200 bg-slate-50 text-slate-700",
+    evidenceLabel: "Недостатъчни данни",
+    actionLabel: "Следи за проверка",
   },
   matches: {
     label: "Съвпада",
     className: "border-emerald-200 bg-emerald-50 text-emerald-800",
+    evidenceLabel: "Проверена политика",
+    actionLabel: "Намерено действие",
   },
 };
+
+function hasConclusiveEvidence(item: PolicyEvidence | undefined) {
+  return Boolean(item && item.comparisonSignal !== "insufficient_data");
+}
 
 export async function generateStaticParams() {
   const data = await getAppData();
@@ -89,8 +99,10 @@ export default async function PartyPage({
                 </h1>
                 <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-700">
                   Профилът показва позициите на партията по общи сфери. Когато
-                  има конкретно обещание или твърдение, под позицията има и
-                  проверка с намерено действие и източници.
+                  има достатъчно конкретно обещание или твърдение, под
+                  позицията има проверка с намерено действие и източници.
+                  По-слабите записи са отбелязани отделно като недостатъчни
+                  данни.
                 </p>
               </div>
             </div>
@@ -111,8 +123,8 @@ export default async function PartyPage({
                 <p className="mt-1 text-sm leading-6 text-slate-700">
                   Скалата 1-5 показва подкрепата на партията за дадена позиция.
                   Проверките под нея са отделни: те сравняват конкретно
-                  твърдение с намерено действие, без сайтът да поставя присъда
-                  вместо теб.
+                  твърдение с намерено действие. Когато липсва достатъчно
+                  надеждна следа, записът не се брои като проверена политика.
                 </p>
               </div>
             </div>
@@ -121,10 +133,18 @@ export default async function PartyPage({
 
         <div className="grid gap-4">
           {data.policyAreas.map((area, index) => {
-            const positions = getCommonPoliciesForArea(data, area.slug);
+            const positions = getCommonPoliciesForArea(data, area.slug).filter(
+              (position) => getPartyPosition(data, party.slug, position.id),
+            );
             const checkedCount = positions.filter((position) =>
-              getEvidenceForCommonPolicy(data, party.slug, position.id),
+              hasConclusiveEvidence(
+                getEvidenceForCommonPolicy(data, party.slug, position.id),
+              ),
             ).length;
+
+            if (positions.length === 0) {
+              return null;
+            }
 
             return (
               <details
@@ -169,6 +189,10 @@ export default async function PartyPage({
                       );
                       const detailsId =
                         item?.id ?? `${party.slug}-${position.id}`;
+                      const signal = item
+                        ? comparisonSignals[item.comparisonSignal]
+                        : undefined;
+                      const isConclusive = hasConclusiveEvidence(item);
 
                       return (
                         <details
@@ -180,7 +204,15 @@ export default async function PartyPage({
                             <div>
                               <div className="flex flex-wrap gap-2">
                                 <Badge variant="neutral">Позиция</Badge>
-                                {item ? <Badge>Има проверка</Badge> : null}
+                                {item ? (
+                                  <Badge
+                                    variant={
+                                      isConclusive ? "default" : "neutral"
+                                    }
+                                  >
+                                    {signal?.evidenceLabel}
+                                  </Badge>
+                                ) : null}
                               </div>
                               <h3 className="mt-3 text-xl font-bold">
                                 {position.title}
@@ -250,17 +282,15 @@ export default async function PartyPage({
                             {item ? (
                               <div className="mt-4 rounded-lg border border-cyan-100 bg-cyan-50/40 p-4">
                                 <div className="mb-4 flex flex-wrap gap-2">
-                                  <Badge>Проверена политика</Badge>
+                                  {isConclusive ? (
+                                    <Badge>{signal?.evidenceLabel}</Badge>
+                                  ) : null}
                                   <span
                                     className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 text-xs font-semibold ${
-                                      comparisonSignals[item.comparisonSignal]
-                                        .className
+                                      signal?.className
                                     }`}
                                   >
-                                    {
-                                      comparisonSignals[item.comparisonSignal]
-                                        .label
-                                    }
+                                    {signal?.label}
                                   </span>
                                 </div>
                                 <div className="grid gap-4 lg:grid-cols-2">
@@ -280,18 +310,25 @@ export default async function PartyPage({
                                           <p className="text-sm leading-6 text-slate-600">
                                             {claim.text}
                                           </p>
-                                          <a
-                                            href={claim.source.url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-800 hover:text-cyan-950"
-                                          >
-                                            {claim.source.label}
-                                            <ExternalLink
-                                              className="h-3.5 w-3.5"
-                                              aria-hidden="true"
-                                            />
-                                          </a>
+                                          {claim.source ? (
+                                            <a
+                                              href={claim.source.url}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                              className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-800 hover:text-cyan-950"
+                                            >
+                                              {claim.source.label}
+                                              <ExternalLink
+                                                className="h-3.5 w-3.5"
+                                                aria-hidden="true"
+                                              />
+                                            </a>
+                                          ) : (
+                                            <p className="mt-2 text-sm font-semibold text-amber-700">
+                                              Липсва надежден източник за
+                                              твърдението.
+                                            </p>
+                                          )}
                                         </div>
                                       ))}
                                     </div>
@@ -302,7 +339,7 @@ export default async function PartyPage({
                                         className="h-4 w-4 text-emerald-700"
                                         aria-hidden="true"
                                       />
-                                      Намерено действие
+                                      {signal?.actionLabel}
                                     </div>
                                     <div className="grid gap-3">
                                       {item.actions.map((action, actionIndex) => (

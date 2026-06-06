@@ -178,12 +178,59 @@ function sourceFrom(
     return undefined;
   }
 
+  try {
+    const parsedUrl = new URL(url);
+    const hasSpecificPath = parsedUrl.pathname.replaceAll("/", "").length > 0;
+
+    if (parsedUrl.hostname === "example.com") {
+      return undefined;
+    }
+
+    if (!title && !hasSpecificPath) {
+      return undefined;
+    }
+  } catch {
+    return undefined;
+  }
+
   const labelParts = [title || "Източник", date].filter(Boolean);
 
   return {
     label: labelParts.join(" · "),
     url,
   };
+}
+
+function hasUsableSource(source: EvidenceSource | undefined) {
+  return Boolean(source && source.url !== "#");
+}
+
+const signalCorrections: Partial<
+  Record<string, PolicyEvidence["comparisonSignal"]>
+> = {
+  "db-budget-transparency": "matches",
+};
+
+function getComparisonSignal({
+  actionSources,
+  check,
+  claimSources,
+}: {
+  actionSources: Array<EvidenceSource | undefined>;
+  check: PolicyCheckRow;
+  claimSources: Array<EvidenceSource | undefined>;
+}) {
+  const hasMissingClaimSource =
+    claimSources.length === 0 || claimSources.some((source) => !hasUsableSource(source));
+  const hasMissingActionSource =
+    actionSources.length === 0 ||
+    actionSources.some((source) => !hasUsableSource(source));
+
+  if (hasMissingClaimSource || hasMissingActionSource) {
+    return "insufficient_data";
+  }
+
+  return signalCorrections[check.check_slug] ?? check.comparison_signal;
 }
 
 function mapSupabaseRows({
@@ -254,30 +301,35 @@ function mapSupabaseRows({
     ]);
   }
 
-  const policyEvidence = policyCheckRows.map((check) => ({
-    id: check.check_slug,
-    partySlug: check.party_slug,
-    areaSlug: check.sphere_slug,
-    commonPolicyId: check.policy_slug || undefined,
-    policyName: check.title,
-    comparisonSignal: check.comparison_signal,
-    claims: (claimsByCheck.get(check.check_slug) || []).map((claim) => ({
+  const policyEvidence = policyCheckRows.map((check) => {
+    const claims = (claimsByCheck.get(check.check_slug) || []).map((claim) => ({
       text: claim.claim_text,
-      source:
-        sourceFrom(claim.source_url, claim.source_title, claim.source_date) || {
-          label: "Няма добавен източник",
-          url: "#",
-        },
-    })),
-    actions: (actionsByCheck.get(check.check_slug) || []).map((action) => ({
+      source: sourceFrom(claim.source_url, claim.source_title, claim.source_date),
+    }));
+    const actions = (actionsByCheck.get(check.check_slug) || []).map((action) => ({
       text: action.action_text,
       source: sourceFrom(
         action.source_url,
         action.source_title,
         action.source_date,
       ),
-    })),
-  }));
+    }));
+
+    return {
+      id: check.check_slug,
+      partySlug: check.party_slug,
+      areaSlug: check.sphere_slug,
+      commonPolicyId: check.policy_slug || undefined,
+      policyName: check.title,
+      comparisonSignal: getComparisonSignal({
+        actionSources: actions.map((action) => action.source),
+        check,
+        claimSources: claims.map((claim) => claim.source),
+      }),
+      claims,
+      actions,
+    };
+  });
 
   return {
     policyAreas,
