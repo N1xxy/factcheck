@@ -5,6 +5,7 @@ import { ChevronDown, RotateCcw, Trophy, XCircle } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { PartyMark } from "@/components/party-mark";
+import { getTopicPalette } from "@/components/topic-colors";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -365,17 +366,22 @@ export function QuizExperience({ data }: { data: AppData }) {
 
       <div className="grid gap-4">
         {data.policyAreas.map((area) => {
+          const topicPalette = getTopicPalette(area.slug);
           const policies = getCommonPoliciesForArea(data, area.slug);
 
           return (
             <details
               key={area.slug}
-              className="group rounded-lg border border-slate-200 bg-white shadow-sm"
+              className={`group rounded-lg border shadow-sm ${topicPalette.border} ${topicPalette.surface}`}
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5">
+              <summary className={`flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg p-5 transition-colors group-open:rounded-b-none ${topicPalette.header}`}>
                 <div>
                   <div className="flex flex-wrap gap-2">
-                    <Badge>{area.name}</Badge>
+                    <span
+                      className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 text-xs font-semibold ${topicPalette.badge}`}
+                    >
+                      {area.name}
+                    </span>
                     <Badge variant="neutral">{policies.length} позиции</Badge>
                   </div>
                   <h2 className="mt-3 text-xl font-bold">{area.name}</h2>
@@ -389,7 +395,7 @@ export function QuizExperience({ data }: { data: AppData }) {
                 />
               </summary>
 
-              <div className="grid gap-3 border-t border-slate-100 p-5 pt-0">
+              <div className={`grid gap-3 border-t p-5 pt-0 ${topicPalette.border}`}>
                 {policies.map((policy) => {
                   const answer = answers[policy.id];
                   const hasAnswer = typeof answer === "number";

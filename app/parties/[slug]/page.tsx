@@ -13,6 +13,7 @@ import { HashOpenDetails } from "@/components/hash-open-details";
 import { PartyMark } from "@/components/party-mark";
 import { SiteHeader } from "@/components/site-header";
 import { SupportMeter } from "@/components/support-meter";
+import { getTopicPalette } from "@/components/topic-colors";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -153,7 +154,8 @@ export default async function PartyPage({
         </Card>
 
         <div className="grid gap-4">
-          {data.policyAreas.map((area, index) => {
+          {data.policyAreas.map((area) => {
+            const topicPalette = getTopicPalette(area.slug);
             const positions = getCommonPoliciesForArea(data, area.slug).filter(
               (position) => getPartyPosition(data, party.slug, position.id),
             );
@@ -170,12 +172,16 @@ export default async function PartyPage({
             return (
               <details
                 key={area.slug}
-                className="group rounded-lg border border-slate-200 bg-white shadow-sm"
-                open={checkedCount > 0 || index < 2}
+                className={`group rounded-lg border shadow-sm ${topicPalette.border} ${topicPalette.surface}`}
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5">
+                <summary className={`flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg p-5 transition-colors group-open:rounded-b-none ${topicPalette.header}`}>
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
+                      <span
+                        className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 text-xs font-semibold ${topicPalette.badge}`}
+                      >
+                        {area.name}
+                      </span>
                       <Badge variant="neutral">
                         {positions.length} позиции
                       </Badge>
@@ -194,7 +200,7 @@ export default async function PartyPage({
                   />
                 </summary>
 
-                <div className="border-t border-slate-100 p-5 pt-0">
+                <div className={`border-t p-5 pt-0 ${topicPalette.border}`}>
                   <div className="grid gap-4">
                     {positions.map((position) => {
                       const item = getEvidenceForCommonPolicy(
