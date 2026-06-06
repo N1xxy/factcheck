@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import { SiteFooter } from "@/components/site-footer";
+
 export const metadata: Metadata = {
   title: "Template",
   description:
@@ -14,7 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bg" className="h-full antialiased">
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }

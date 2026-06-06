@@ -1,16 +1,12 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  BookOpenCheck,
   ClipboardList,
-  ExternalLink,
-  FileText,
   Route,
   ShieldCheck,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/site-header";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,8 +18,7 @@ import {
 import { getAppData } from "@/lib/app-data";
 
 export default async function Home() {
-  const { commonPolicies, parties, policyAreas, policyEvidence } =
-    await getAppData();
+  const { commonPolicies, parties, policyEvidence } = await getAppData();
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
@@ -32,24 +27,24 @@ export default async function Home() {
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:py-16">
           <div className="flex flex-col justify-center">
-            <Badge className="mb-5">Информиран избор</Badge>
             <h1 className="max-w-3xl text-4xl font-bold tracking-normal text-slate-950 sm:text-5xl">
-              Бърз начин да сравниш партийни позиции, обещания и действия.
+              Оформи политическите си предпочитания с Template.
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-              Template събира кратки профили на партии: какво подкрепят, какво
-              са обещали и какви действия са открити по тези обещания. Вместо
-              да поставя присъда, сайтът ти дава източниците и контекста.
+              Тук можеш да видиш дали думите на една партия отговарят на действията ѝ 
+              или да откриеш коя партия е най-близо до твоите възгледи чрез кратък тест.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg">
+              <Button asChild variant="secondary" size="lg">
                 <Link href="/parties">
                   Разгледай партии
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </Button>
-              <Button asChild variant="secondary" size="lg">
-                <Link href="/quiz">Започни теста</Link>
+              <Button asChild size="lg">
+                <Link href="/quiz">
+                  Започни теста
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
               </Button>
             </div>
           </div>
@@ -58,10 +53,7 @@ export default async function Home() {
             <CardHeader className="border-b border-slate-100 bg-cyan-50/70">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <CardTitle>Как работи</CardTitle>
-                  <CardDescription>
-                    Три стъпки, без претоварване на началната страница.
-                  </CardDescription>
+                  <CardTitle>Двете основни функции</CardTitle>
                 </div>
                 <ShieldCheck
                   className="h-9 w-9 text-cyan-700"
@@ -73,18 +65,13 @@ export default async function Home() {
               {[
                 {
                   icon: ClipboardList,
-                  title: "Избираш партия",
-                  text: "Виждаш позициите и проверените политики в един профил.",
+                  title: "Проследявай обещания",
+                  text: "За всяка партия можеш да видиш обещания и действията, които са последвали. И сам да прецениш дали са си свършили работата",
                 },
                 {
-                  icon: FileText,
-                  title: "Отваряш сфера",
-                  text: "Сферите са еднакви за всички партии, за да сравняваш по-лесно.",
-                },
-                {
-                  icon: ExternalLink,
-                  title: "Проверяваш източника",
-                  text: "При проверените политики източниците стоят до твърдението и действието.",
+                  icon: Route,
+                  title: "Сравни себе си",
+                  text: "В теста отговаряш само на това, което те интересува, и получаваш партията най-близо до твоите възгледи.",
                 },
               ].map((item) => (
                 <div
@@ -108,86 +95,37 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-4 px-5 py-8 sm:px-8 md:grid-cols-4">
+      <section className="mx-auto grid max-w-7xl gap-4 px-5 py-8 sm:px-8 md:grid-cols-3">
         <Card>
           <CardHeader>
-            <Badge variant="neutral">Партии</Badge>
-            <CardTitle>{parties.length} партии</CardTitle>
+            
+            <CardTitle>{parties.length} Партии</CardTitle>
             <CardDescription>
-              Всяка партия има собствен профил, за да не се превръща началната
-              страница в дълъг списък.
+              Всяка партия има собствен профил, където ясно се виждат приоритетие ѝ.
             </CardDescription>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader>
-            <Badge variant="neutral">Сфери</Badge>
-            <CardTitle>{policyAreas.length} общи сфери</CardTitle>
+            
+            <CardTitle>{commonPolicies.length} Политики</CardTitle>
             <CardDescription>
-              Сферите са еднакви за всички партии и помагат на теста да сравнява
-              по една структура.
+              Това са общите проблеми, по които партиите работят (или не), и по които тестът използва за сравнение. 
             </CardDescription>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader>
-            <Badge variant="neutral">Позиции</Badge>
-            <CardTitle>{commonPolicies.length} позиции</CardTitle>
+            
+            <CardTitle>{policyEvidence.length} Проверки</CardTitle>
             <CardDescription>
-              Това са общите въпроси, по които тестът сравнява теб и партиите.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader>
-            <Badge variant="neutral">Проверки</Badge>
-            <CardTitle>{policyEvidence.length} проверки</CardTitle>
-            <CardDescription>
-              Всяка проверка показва твърдение, намерено действие и източници в
-              контекст.
+              Толкова твърдения са проверени с последвалите ги действия и потвърдени с надеждни източници.
             </CardDescription>
           </CardHeader>
         </Card>
       </section>
 
-      <section className="border-t border-slate-200 bg-white">
-        <div className="mx-auto grid max-w-7xl gap-6 px-5 py-8 sm:px-8 lg:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <BookOpenCheck className="h-7 w-7 text-cyan-700" aria-hidden="true" />
-              <CardTitle className="text-xl">Партийни профили</CardTitle>
-              <CardDescription>
-                Профилът показва позициите на партията по сфери. Ако има
-                проверено обещание, то се появява под съответната позиция.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild>
-                <Link href="/parties">
-                  Отвори списъка
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <Route className="h-7 w-7 text-cyan-700" aria-hidden="true" />
-              <CardTitle className="text-xl">Тест за съвпадение</CardTitle>
-              <CardDescription>
-                Отговаряш само на позициите, които са важни за теб. Накрая
-                виждаш кои партии са най-близо до твоите отговори.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild variant="secondary">
-                <Link href="/quiz">Виж теста</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+      
     </main>
   );
 }

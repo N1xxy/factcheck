@@ -3,12 +3,11 @@ import { ArrowRight } from "lucide-react";
 
 import { PartyMark } from "@/components/party-mark";
 import { SiteHeader } from "@/components/site-header";
-import { Badge } from "@/components/ui/badge";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -26,14 +25,12 @@ export default async function PartiesPage() {
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
-          <Badge>Партии</Badge>
+
           <h1 className="mt-4 max-w-3xl text-4xl font-bold">
-            Избери партия и разгледай позициите по сфери.
+            Избери партия и разгледай политическите ѝ позиции.
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
-            Във всеки профил има еднакви сфери и общи позиции за сравнение.
-            Когато има конкретно обещание или твърдение, добавяме и проверка с
-            източници.
+            Виж какво предлагат партиите по различни теми и провери дали думите им отговарят на фактите.
           </p>
         </div>
       </section>
@@ -49,11 +46,11 @@ export default async function PartiesPage() {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <Badge variant="neutral">Партиен профил</Badge>
+                    
                     <CardTitle className={`mt-3 text-2xl ${party.accentClass}`}>
                       {party.name}
                     </CardTitle>
-                    <CardDescription>{party.description}</CardDescription>
+                   
                   </div>
                   <PartyMark party={party} />
                 </div>

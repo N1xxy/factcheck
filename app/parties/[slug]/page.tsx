@@ -114,17 +114,11 @@ export default async function PartyPage({
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
               <PartyMark party={party} size="lg" />
               <div>
-                <Badge variant="neutral">Партиен профил</Badge>
+                
                 <h1 className={`mt-4 text-4xl font-bold ${party.accentClass}`}>
                   {party.name}
                 </h1>
-                <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-700">
-                  Профилът показва позициите на партията по общи сфери. Когато
-                  има достатъчно конкретно обещание или твърдение, под
-                  позицията има проверка с намерено действие и източници.
-                  По-слабите записи са отбелязани отделно като недостатъчни
-                  данни.
-                </p>
+                
               </div>
             </div>
           </div>
@@ -140,12 +134,12 @@ export default async function PartyPage({
                 aria-hidden="true"
               />
               <div>
-                <h2 className="font-bold">Как да четеш профила?</h2>
+                <h2 className="font-bold">Начин на употреба</h2>
                 <p className="mt-1 text-sm leading-6 text-slate-700">
                   Скалата 1-5 показва подкрепата на партията за дадена позиция.
-                  Проверките под нея са отделни: те сравняват конкретно
-                  твърдение с намерено действие. Когато липсва достатъчно
-                  надеждна следа, записът не се брои като проверена политика.
+                  Проверките под нея сравняват конкретно
+                  твърдение с последвало партийно действие. Когато липсва достатъчно
+                  надеждна информация, записът не се брои като официално проверен.
                 </p>
               </div>
             </div>
@@ -176,12 +170,11 @@ export default async function PartyPage({
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge>{area.name}</Badge>
                       <Badge variant="neutral">
                         {positions.length} позиции
                       </Badge>
                       <Badge variant="neutral">
-                        {checkedCount} проверки
+                        {checkedCount} провер{checkedCount === 1 ? "ка" : "ки"}
                       </Badge>
                     </div>
                     <h2 className="mt-3 text-xl font-bold">{area.name}</h2>
@@ -224,7 +217,7 @@ export default async function PartyPage({
                           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5">
                             <div>
                               <div className="flex flex-wrap gap-2">
-                                <Badge variant="neutral">Позиция</Badge>
+                                
                                 {item ? (
                                   <Badge
                                     variant={
