@@ -23,7 +23,26 @@ import {
   getParty,
   parties,
   policyAreas,
+  type PolicyEvidence,
 } from "@/lib/data";
+
+const comparisonSignals: Record<
+  PolicyEvidence["comparisonSignal"],
+  { label: string; className: string }
+> = {
+  mismatch: {
+    label: "Има разминаване",
+    className: "border-amber-200 bg-amber-50 text-amber-800",
+  },
+  insufficient_data: {
+    label: "Няма достатъчно данни",
+    className: "border-slate-200 bg-slate-50 text-slate-700",
+  },
+  matches: {
+    label: "Съвпада",
+    className: "border-emerald-200 bg-emerald-50 text-emerald-800",
+  },
+};
 
 export function generateStaticParams() {
   return parties.map((party) => ({ slug: party.slug }));
@@ -224,7 +243,20 @@ export default async function PartyPage({
 
                             {item ? (
                               <div className="mt-4 rounded-lg border border-cyan-100 bg-cyan-50/40 p-4">
-                                <Badge className="mb-4">Проверена политика</Badge>
+                                <div className="mb-4 flex flex-wrap gap-2">
+                                  <Badge>Проверена политика</Badge>
+                                  <span
+                                    className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 text-xs font-semibold ${
+                                      comparisonSignals[item.comparisonSignal]
+                                        .className
+                                    }`}
+                                  >
+                                    {
+                                      comparisonSignals[item.comparisonSignal]
+                                        .label
+                                    }
+                                  </span>
+                                </div>
                                 <div className="grid gap-4 lg:grid-cols-2">
                                   <div className="rounded-lg border border-slate-200 bg-white p-4">
                                     <div className="mb-2 flex items-center gap-2 text-sm font-bold text-slate-900">

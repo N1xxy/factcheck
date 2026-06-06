@@ -1,0 +1,68 @@
+check_slug,party_slug,sphere_slug,policy_slug,title,comparison_signal
+pp-e-health,pp,healthcare,e-health,Електронно здравеопазване,mismatch
+pp-healthcare-access,pp,healthcare,healthcare-access,Достъп до услуги,insufficient_data
+pp-medical-staff,pp,healthcare,medical-staff,Медицински кадри,matches
+pp-revenue-growth,pp,budget,revenue-growth,Повишаване на приходите,matches
+pp-social-spending,pp,budget,social-spending,Социални разходи,mismatch
+pp-economic-growth,pp,budget,economic-growth,Икономически растеж,insufficient_data
+pp-flat-tax,pp,taxes,flat-tax,Плосък данък,insufficient_data
+pp-tax-collection,pp,taxes,tax-collection,Данъчна събираемост,matches
+pp-tax-relief,pp,taxes,tax-relief,Данъчни облекчения,insufficient_data
+pp-chief-prosecutor,pp,judicial-reform,chief-prosecutor,Главен прокурор,mismatch
+pp-supreme-judicial-council,pp,judicial-reform,supreme-judicial-council,ВСС,insufficient_data
+pp-independent-court,pp,judicial-reform,independent-court,Независим съд,insufficient_data
+pp-anti-corruption-commission,pp,anti-corruption,anti-corruption-commission,КПКОНПИ,matches
+pp-public-procurement,pp,anti-corruption,public-procurement,Обществени поръчки,insufficient_data
+pp-captured-state,pp,anti-corruption,captured-state,Завладяна държава,insufficient_data
+pp-teacher-pay,pp,education,teacher-pay,Учителски заплати,mismatch
+pp-stem-education,pp,education,stem-education,STEM обучение,matches
+pp-digitalization,pp,education,digitalization,Дигитализация,insufficient_data
+pp-higher-pensions,pp,social-policy-income,higher-pensions,По-високи пенсии,matches
+pp-social-benefits,pp,social-policy-income,social-benefits,Социални помощи,insufficient_data
+pp-family-policy,pp,social-policy-income,family-policy,Семейна политика,insufficient_data
+pp-gas-diversification,pp,energy,gas-diversification,Газова диверсификация,matches
+pp-nuclear-energy,pp,energy,nuclear-energy,Ядрена енергия,insufficient_data
+pp-green-transition,pp,energy,green-transition,Зелен преход,insufficient_data
+pp-eurozone,pp,eu,eurozone,Еврозона,matches
+pp-schengen,pp,eu,schengen,Шенген,insufficient_data
+pp-nato,pp,eu,nato,НАТО,insufficient_data
+pp-ukraine-aid,pp,russia-ukraine,ukraine-aid,Помощ за Украйна,matches
+pp-russia-sanctions,pp,russia-ukraine,russia-sanctions,Санкции срещу Русия,insufficient_data
+db-e-health,db,healthcare,e-health,Електронно здравеопазване,matches
+db-healthcare-spending-control,db,healthcare,healthcare-spending-control,Контрол на разходите,insufficient_data
+db-healthcare-competition,db,healthcare,healthcare-competition,Конкуренция,insufficient_data
+db-fiscal-discipline,db,budget,fiscal-discipline,Фискална дисциплина,insufficient_data
+db-budget-transparency,db,budget,budget-transparency,Прозрачност,insufficient_data
+db-budget-efficiency,db,budget,budget-efficiency,Ефективност,insufficient_data
+db-flat-tax,db,taxes,flat-tax,Плосък данък,matches
+db-tax-predictability,db,taxes,tax-predictability,Предвидимост,insufficient_data
+db-low-tax-burden,db,taxes,low-tax-burden,Ниско данъчно бреме,matches
+db-prosecution-and-sjc,db,judicial-reform,prosecution-and-sjc,Прокуратура и ВСС,mismatch
+db-judicial-independence,db,judicial-reform,judicial-independence,Независимост,insufficient_data
+db-anti-corruption-transparency,db,anti-corruption,anti-corruption-transparency,КПКОНПИ и Прозрачност,mismatch
+db-conflict-of-interest,db,anti-corruption,conflict-of-interest,Конфликт на интереси,insufficient_data
+db-school-autonomy,db,education,school-autonomy,Автономия,insufficient_data
+db-education-quality,db,education,education-quality,Качество,insufficient_data
+db-digitalization,db,education,digitalization,Дигитализация,matches
+db-sustainable-pensions,db,social-policy-income,sustainable-pensions,Устойчив модел на пенсиите,insufficient_data
+db-social-support,db,social-policy-income,social-support,Социална подкрепа,insufficient_data
+db-income-growth,db,social-policy-income,income-growth,Доходи,insufficient_data
+db-green-transition,db,energy,green-transition,Зелен преход,matches
+db-nuclear-energy,db,energy,nuclear-energy,Ядрена енергия,matches
+db-energy-diversification,db,energy,energy-diversification,Диверсификация,matches
+db-eurozone,db,eu,eurozone,Еврозона,matches
+db-schengen,db,eu,schengen,Шенген,matches
+db-nato,db,eu,nato,НАТО,insufficient_data
+db-military-aid,db,russia-ukraine,military-aid,Военна помощ,matches
+db-sanctions,db,russia-ukraine,sanctions,Санкции,matches
+db-limit-russian-influence,db,russia-ukraine,limit-russian-influence,Ограничаване на руско влияние,insufficient_data
+pp-db-constitutional-changes,pp-db,judicial-reform,constitutional-changes,Конституционни промени,insufficient_data
+pp-db-anti-corruption-commission-reform,pp-db,anti-corruption,anti-corruption-commission-reform,Реформа на КПКОНПИ,matches
+pp-db-eurozone,pp-db,eu,eurozone,Еврозона,matches
+pp-db-schengen,pp-db,eu,schengen,Шенген,matches
+pp-db-support-for-ukraine,pp-db,russia-ukraine,support-for-ukraine,Подкрепа за Украйна,insufficient_data
+pp-db-energy-diversification,pp-db,energy,energy-diversification,Диверсификация,insufficient_data
+pp-db-education-modernization,pp-db,education,education-modernization,Модернизация,insufficient_data
+pp-db-pensions,pp-db,social-policy-income,pensions,Пенсии,insufficient_data
+pp-db-financial-stability,pp-db,budget,financial-stability,Финансова стабилност,insufficient_data
+pp-db-healthcare-digitalization,pp-db,healthcare,healthcare-digitalization,Дигитализация,insufficient_data

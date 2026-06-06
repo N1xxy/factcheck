@@ -15,6 +15,7 @@ export type PolicyEvidence = {
   areaSlug: string;
   commonPolicyId?: string;
   policyName: string;
+  comparisonSignal: "mismatch" | "insufficient_data" | "matches";
   claims: Array<{
     text: string;
     source: EvidenceSource;
@@ -367,6 +368,7 @@ export const policyEvidence: PolicyEvidence[] = [
     areaSlug: "healthcare",
     commonPolicyId: "childrens-hospital",
     policyName: "Национална детска болница",
+    comparisonSignal: "insufficient_data",
     claims: [
       {
         text: "Партията поставя детското здравеопазване и проекта за Национална детска болница сред приоритетите си.",
@@ -392,6 +394,7 @@ export const policyEvidence: PolicyEvidence[] = [
     areaSlug: "healthcare",
     commonPolicyId: "e-health",
     policyName: "Електронни рецепти",
+    comparisonSignal: "matches",
     claims: [
       {
         text: "В програмни документи се подкрепя дигитализация на здравната система и електронни услуги.",
@@ -417,6 +420,7 @@ export const policyEvidence: PolicyEvidence[] = [
     areaSlug: "education",
     commonPolicyId: "free-textbooks",
     policyName: "Безплатни учебници от I до XII клас",
+    comparisonSignal: "matches",
     claims: [
       {
         text: "Партията представя безплатните учебници за целия училищен курс като част от подкрепата за родители и ученици.",
@@ -442,6 +446,7 @@ export const policyEvidence: PolicyEvidence[] = [
     areaSlug: "education",
     commonPolicyId: "teacher-pay",
     policyName: "Учителски заплати",
+    comparisonSignal: "insufficient_data",
     claims: [
       {
         text: "Партията заявява подкрепа за заплати на педагогическите специалисти над 125% от средната брутна заплата.",
@@ -463,6 +468,7 @@ export const policyEvidence: PolicyEvidence[] = [
     areaSlug: "education",
     commonPolicyId: "dual-education",
     policyName: "Професионално и дуално обучение",
+    comparisonSignal: "insufficient_data",
     claims: [
       {
         text: "Партията подкрепя разширяване на професионалното образование и дуалното обучение.",
@@ -484,6 +490,7 @@ export const policyEvidence: PolicyEvidence[] = [
     areaSlug: "healthcare",
     commonPolicyId: "doctor-access",
     policyName: "Достъп до лекари в малки населени места",
+    comparisonSignal: "mismatch",
     claims: [
       {
         text: "Партията говори за телемедицина, мобилни медицински екипи и по-добър достъп в отдалечени райони.",
