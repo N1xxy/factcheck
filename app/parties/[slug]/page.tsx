@@ -43,6 +43,12 @@ const comparisonSignals: Record<
     evidenceLabel: "Недостатъчни данни",
     actionLabel: "Следи за проверка",
   },
+  partially_inline: {
+    label: "Частично съвпада",
+    className: "border-sky-200 bg-sky-50 text-sky-800",
+    evidenceLabel: "Частична проверка",
+    actionLabel: "Намерено действие",
+  },
   matches: {
     label: "Съвпада",
     className: "border-emerald-200 bg-emerald-50 text-emerald-800",

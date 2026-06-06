@@ -44,3 +44,4 @@ data/real_research_demo_seed.sql
 .gitignore
 .gitignore
 data/demo_supabase_seed.sql
+supabase_seed_db_dps_24_policies.sql

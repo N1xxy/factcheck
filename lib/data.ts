@@ -15,7 +15,11 @@ export type PolicyEvidence = {
   areaSlug: string;
   commonPolicyId?: string;
   policyName: string;
-  comparisonSignal: "mismatch" | "insufficient_data" | "matches";
+  comparisonSignal:
+    | "mismatch"
+    | "insufficient_data"
+    | "partially_inline"
+    | "matches";
   claims: Array<{
     text: string;
     source?: EvidenceSource;
