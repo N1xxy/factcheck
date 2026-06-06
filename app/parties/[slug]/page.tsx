@@ -78,6 +78,27 @@ export default async function PartyPage({
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <HashOpenDetails />
       <SiteHeader />
+      <div className="sticky top-[73px] z-10 border-b border-slate-200 bg-slate-50/90 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <div className="flex min-w-0 items-center gap-3">
+            <PartyMark party={party} />
+            <div className="min-w-0">
+              <div className="text-xs font-bold uppercase text-slate-500">
+                Преглеждаш
+              </div>
+              <div className={`truncate text-base font-bold ${party.accentClass}`}>
+                {party.name}
+              </div>
+            </div>
+          </div>
+          <Button asChild variant="secondary" size="sm">
+            <Link href="/parties">
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Всички партии
+            </Link>
+          </Button>
+        </div>
+      </div>
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8">

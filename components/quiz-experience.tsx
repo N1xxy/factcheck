@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, RotateCcw, Trophy } from "lucide-react";
+import { ChevronDown, RotateCcw, Trophy, XCircle } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { PartyMark } from "@/components/party-mark";
@@ -136,32 +136,43 @@ function ResultPartyCard({
   answeredPolicies: { policyId: string; value: number }[];
 }) {
   return (
-    <Card className={party.ringClass}>
-      <CardHeader className={`${party.softClass} border-b border-slate-100`}>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <PartyMark party={party} />
-            <div>
-              <CardTitle className={party.accentClass}>{party.name}</CardTitle>
-              <CardDescription>
-                {match}% съвпадение по {comparableCount} позиции
-              </CardDescription>
-            </div>
-          </div>
-          <div className="flex flex-col gap-3 sm:items-end">
-            <div className="h-3 w-full rounded-full bg-white ring-1 ring-slate-200 sm:w-44">
-              <div
-                className="h-3 rounded-full bg-cyan-600"
-                style={{ width: `${match}%` }}
-              />
-            </div>
-            <Button asChild variant="secondary" size="sm">
-              <Link href={`/parties/${party.slug}`}>Пълен профил</Link>
-            </Button>
+    <details
+      className={`group rounded-lg border bg-white shadow-sm ${party.ringClass}`}
+    >
+      <summary
+        className={`${party.softClass} flex cursor-pointer list-none flex-col gap-4 rounded-lg p-5 transition-colors group-open:rounded-b-none sm:flex-row sm:items-center sm:justify-between`}
+      >
+        <div className="flex min-w-0 items-center gap-3">
+          <PartyMark party={party} />
+          <div className="min-w-0">
+            <h3 className={`truncate text-xl font-bold ${party.accentClass}`}>
+              {party.name}
+            </h3>
+            <p className="mt-1 text-sm leading-6 text-slate-600">
+              {match}% съвпадение по {comparableCount} позиции
+            </p>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="grid gap-3">
+        <div className="flex flex-col gap-3 sm:w-56 sm:items-end">
+          <div className="h-3 w-full rounded-full bg-white ring-1 ring-slate-200">
+            <div
+              className="h-3 rounded-full bg-cyan-600"
+              style={{ width: `${match}%` }}
+            />
+          </div>
+          <span className="inline-flex h-9 w-fit items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-900 transition-colors group-open:bg-slate-50">
+            Виж отговорите
+            <ChevronDown
+              className="h-4 w-4 transition-transform group-open:rotate-180"
+              aria-hidden="true"
+            />
+          </span>
+        </div>
+      </summary>
+      <div className="grid gap-3 border-t border-slate-100 p-5">
+        <Button asChild variant="secondary" size="sm" className="w-fit">
+          <Link href={`/parties/${party.slug}`}>Пълен профил</Link>
+        </Button>
         {answeredPolicies.map((answer) => {
           const policy = data.commonPolicies.find(
             (item) => item.id === answer.policyId,
@@ -236,8 +247,8 @@ function ResultPartyCard({
             </div>
           );
         })}
-      </CardContent>
-    </Card>
+      </div>
+    </details>
   );
 }
 
@@ -289,6 +300,15 @@ export function QuizExperience({ data }: { data: AppData }) {
 
   function setAnswer(policyId: string, value: number) {
     setAnswers((current) => ({ ...current, [policyId]: value }));
+    setShowResults(false);
+  }
+
+  function clearAnswer(policyId: string) {
+    setAnswers((current) => {
+      const nextAnswers = { ...current };
+      delete nextAnswers[policyId];
+      return nextAnswers;
+    });
     setShowResults(false);
   }
 
@@ -370,77 +390,99 @@ export function QuizExperience({ data }: { data: AppData }) {
               </summary>
 
               <div className="grid gap-3 border-t border-slate-100 p-5 pt-0">
-                {policies.map((policy) => (
-                  <Card key={policy.id}>
-                    <CardHeader>
-                      <div className="flex flex-wrap gap-2">
-                        <Badge variant="neutral">Обща позиция</Badge>
-                        <Badge
-                          variant={
-                            typeof answers[policy.id] === "number"
-                              ? "green"
-                              : "amber"
-                          }
-                        >
-                          {typeof answers[policy.id] === "number"
-                            ? "Отговорено"
-                            : "Неотговорено"}
-                        </Badge>
-                      </div>
-                      <CardTitle className="text-lg">{policy.title}</CardTitle>
-                      <CardDescription>{policy.question}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                          <span className="text-sm font-bold text-red-800">
-                            Не подкрепям
-                          </span>
-                          <span className="text-sm font-bold text-slate-500">
-                            Смесено
-                          </span>
-                          <span className="text-sm font-bold text-emerald-700">
-                            Подкрепям
-                          </span>
+                {policies.map((policy) => {
+                  const answer = answers[policy.id];
+                  const hasAnswer = typeof answer === "number";
+
+                  return (
+                    <details
+                      key={policy.id}
+                      className="group/policy rounded-lg border border-slate-200 bg-white shadow-sm"
+                    >
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap gap-2">
+                            <Badge variant="neutral">Обща позиция</Badge>
+                            <Badge variant={hasAnswer ? "green" : "amber"}>
+                              {hasAnswer ? "Отговорено" : "Неотговорено"}
+                            </Badge>
+                          </div>
+                          <h3 className="mt-3 text-lg font-bold">
+                            {policy.title}
+                          </h3>
+                          <p className="mt-1 text-sm leading-6 text-slate-600">
+                            {policy.question}
+                          </p>
                         </div>
-                        <input
-                          type="range"
-                          min="1"
-                          max="5"
-                          step="1"
-                          value={answers[policy.id] ?? 3}
-                          onChange={(event) =>
-                            setAnswer(policy.id, Number(event.target.value))
-                          }
-                          className="h-3 w-full cursor-pointer appearance-none rounded-full accent-cyan-700"
-                          style={{
-                            background:
-                              "linear-gradient(90deg, #991b1b 0%, #fca5a5 25%, #cbd5e1 50%, #7dd3fc 75%, #1d4ed8 100%)",
-                          }}
-                          aria-label={`Отговор за ${policy.title}`}
+                        <ChevronDown
+                          className="h-5 w-5 shrink-0 text-slate-500 transition-transform group-open/policy:rotate-180"
+                          aria-hidden="true"
                         />
-                        <div className="mt-3 grid grid-cols-5 gap-2 text-center text-xs font-bold text-slate-500">
-                          {[1, 2, 3, 4, 5].map((level) => (
-                            <span
-                              key={level}
-                              className={
-                                answers[policy.id] === level
-                                  ? "text-slate-950"
-                                  : undefined
-                              }
-                            >
-                              {level}
+                      </summary>
+                      <div className="border-t border-slate-100 p-5 pt-0">
+                        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                          <div className="mb-3 flex items-center justify-between gap-3">
+                            <span className="text-sm font-bold text-red-800">
+                              Не подкрепям
                             </span>
-                          ))}
+                            <span className="text-sm font-bold text-slate-500">
+                              Смесено
+                            </span>
+                            <span className="text-sm font-bold text-emerald-700">
+                              Подкрепям
+                            </span>
+                          </div>
+                          <input
+                            type="range"
+                            min="1"
+                            max="5"
+                            step="1"
+                            value={answer ?? 3}
+                            onChange={(event) =>
+                              setAnswer(policy.id, Number(event.target.value))
+                            }
+                            className="h-3 w-full cursor-pointer appearance-none rounded-full accent-cyan-700"
+                            style={{
+                              background:
+                                "linear-gradient(90deg, #991b1b 0%, #fca5a5 25%, #cbd5e1 50%, #7dd3fc 75%, #1d4ed8 100%)",
+                            }}
+                            aria-label={`Отговор за ${policy.title}`}
+                          />
+                          <div className="mt-3 grid grid-cols-5 gap-2 text-center text-xs font-bold text-slate-500">
+                            {[1, 2, 3, 4, 5].map((level) => (
+                              <span
+                                key={level}
+                                className={
+                                  answer === level
+                                    ? "text-slate-950"
+                                    : undefined
+                                }
+                              >
+                                {level}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <p className="text-xs font-medium text-slate-500">
+                            1 = никаква подкрепа, 3 = смесено/неутрално, 5 =
+                            пълна подкрепа.
+                          </p>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            disabled={!hasAnswer}
+                            onClick={() => clearAnswer(policy.id)}
+                          >
+                            <XCircle className="h-4 w-4" aria-hidden="true" />
+                            Не искам да отговарям
+                          </Button>
                         </div>
                       </div>
-                      <p className="mt-3 text-xs font-medium text-slate-500">
-                        1 = никаква подкрепа, 3 = смесено/неутрално, 5 = пълна
-                        подкрепа.
-                      </p>
-                    </CardContent>
-                  </Card>
-                ))}
+                    </details>
+                  );
+                })}
               </div>
               </details>
             );
