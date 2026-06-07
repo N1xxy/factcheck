@@ -8,4 +8,5 @@ pnpm dev
 # or
 bun dev
 ```
-Name and design are temporary ignore the ai generated text it will be changed. Keep an open mind its in development.
+Or check the live deployment on
+factcheck-peach.vercel.app
