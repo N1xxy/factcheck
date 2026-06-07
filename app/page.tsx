@@ -16,9 +16,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getAppData } from "@/lib/app-data";
+import { isFullyCheckedPolicy } from "@/lib/policy-checks";
 
 export default async function Home() {
-  const { commonPolicies, parties, policyEvidence } = await getAppData();
+  const data = await getAppData();
+  const { commonPolicies, parties, partyPositions, policyEvidence } = data;
+  const fullCheckCount = policyEvidence.filter((evidence) =>
+    isFullyCheckedPolicy(
+      evidence,
+      partyPositions.find(
+        (position) =>
+          position.partySlug === evidence.partySlug &&
+          position.commonPolicyId === evidence.commonPolicyId,
+      ),
+    ),
+  ).length;
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
@@ -117,7 +129,7 @@ export default async function Home() {
         <Card>
           <CardHeader>
             
-            <CardTitle>{policyEvidence.length} Проверки</CardTitle>
+            <CardTitle>{fullCheckCount} Проверки</CardTitle>
             <CardDescription>
               Толкова твърдения са проверени с последвалите ги действия и потвърдени с надеждни източници.
             </CardDescription>

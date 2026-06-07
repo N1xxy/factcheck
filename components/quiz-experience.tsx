@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { AppData } from "@/lib/app-data";
 import type { CommonPolicy, Party } from "@/lib/data";
+import { isFullyCheckedPolicy } from "@/lib/policy-checks";
 import { cn } from "@/lib/utils";
 
 const answerLabels: Record<number, string> = {
@@ -371,6 +372,14 @@ function ResultPartyCard({
             const position = policy
               ? getPartyPosition(data, party.slug, policy.id)
               : undefined;
+            const evidence = policy
+              ? data.policyEvidence.find(
+                  (item) =>
+                    item.partySlug === party.slug &&
+                    item.commonPolicyId === policy.id,
+                )
+              : undefined;
+            const isFullyChecked = isFullyCheckedPolicy(evidence, position);
 
             if (!policy) {
               return null;
@@ -384,6 +393,9 @@ function ResultPartyCard({
                 <h3 className="wrap-break-word text-sm font-bold">
                   {policy.title}
                 </h3>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
+                  {policy.question}
+                </p>
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
                   <ScoreBars label="Ти" value={answer.value} />
                   <ScoreBars
@@ -395,6 +407,18 @@ function ResultPartyCard({
                   <p className="mt-1 text-xs font-semibold text-cyan-700">
                     Тази тема е важна за теб
                   </p>
+                ) : null}
+                {isFullyChecked && evidence ? (
+                  <Button
+                    asChild
+                    variant="secondary"
+                    size="sm"
+                    className="mt-3 w-fit"
+                  >
+                    <Link href={`/parties/${party.slug}#${evidence.id}`}>
+                      Виж проверката
+                    </Link>
+                  </Button>
                 ) : null}
               </div>
             );

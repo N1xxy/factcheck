@@ -15,6 +15,7 @@ import {
   getAppData,
   getEvidenceForParty,
 } from "@/lib/app-data";
+import { isFullyCheckedPolicy } from "@/lib/policy-checks";
 
 export default async function PartiesPage() {
   const data = await getAppData();
@@ -37,7 +38,17 @@ export default async function PartiesPage() {
 
       <section className="mx-auto grid max-w-7xl gap-4 px-5 py-8 sm:px-8 md:grid-cols-2">
         {data.parties.map((party) => {
-          const evidenceCount = getEvidenceForParty(data, party.slug).length;
+          const evidenceCount = getEvidenceForParty(data, party.slug).filter(
+            (evidence) =>
+              isFullyCheckedPolicy(
+                evidence,
+                data.partyPositions.find(
+                  (position) =>
+                    position.partySlug === party.slug &&
+                    position.commonPolicyId === evidence.commonPolicyId,
+                ),
+              ),
+          ).length;
 
           return (
             <Card key={party.slug} className={party.ringClass}>

@@ -26,6 +26,7 @@ import {
 import {
   type PolicyEvidence,
 } from "@/lib/data";
+import { isFullyCheckedPolicy } from "@/lib/policy-checks";
 
 const comparisonSignals: Record<
   PolicyEvidence["comparisonSignal"],
@@ -46,7 +47,7 @@ const comparisonSignals: Record<
   partially_inline: {
     label: "Частично съвпада",
     className: "border-sky-200 bg-sky-50 text-sky-800",
-    evidenceLabel: "Частична проверка",
+    evidenceLabel: "Проверена политика",
     actionLabel: "Намерено действие",
   },
   matches: {
@@ -56,10 +57,6 @@ const comparisonSignals: Record<
     actionLabel: "Намерено действие",
   },
 };
-
-function hasConclusiveEvidence(item: PolicyEvidence | undefined) {
-  return Boolean(item && item.comparisonSignal !== "insufficient_data");
-}
 
 export async function generateStaticParams() {
   const data = await getAppData();
@@ -159,8 +156,9 @@ export default async function PartyPage({
               (position) => getPartyPosition(data, party.slug, position.id),
             );
             const checkedCount = positions.filter((position) =>
-              hasConclusiveEvidence(
+              isFullyCheckedPolicy(
                 getEvidenceForCommonPolicy(data, party.slug, position.id),
+                getPartyPosition(data, party.slug, position.id),
               ),
             ).length;
 
@@ -208,6 +206,10 @@ export default async function PartyPage({
                       const signal = item
                         ? comparisonSignals[item.comparisonSignal]
                         : undefined;
+                      const isFullyChecked = isFullyCheckedPolicy(
+                        item,
+                        partyPosition,
+                      );
 
                       return (
                         <details
@@ -218,7 +220,13 @@ export default async function PartyPage({
                           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 marker:hidden [&::-webkit-details-marker]:hidden">
                             <div className="min-w-0">
                               {item ? (
-                                <div className="text-xs font-bold uppercase text-slate-500">
+                                <div
+                                  className={`text-xs font-bold uppercase ${
+                                    isFullyChecked
+                                      ? "text-cyan-700"
+                                      : "text-slate-500"
+                                  }`}
+                                >
                                   {signal?.evidenceLabel}
                                 </div>
                               ) : null}
